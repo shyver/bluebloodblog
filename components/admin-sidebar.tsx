@@ -24,7 +24,7 @@ export function AdminSidebar() {
   }
 
   return (
-    <Sidebar>
+    <Sidebar className="hidden md:flex" variant="inset" >
       <SidebarHeader className="flex h-14 items-center px-4">
         <Link href="/dashboard" className="flex items-center gap-2 font-semibold">
           <span className="h-6 w-6 rounded-full bg-primary"></span>

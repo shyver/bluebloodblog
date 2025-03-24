@@ -17,11 +17,16 @@ import {
   XAxis,
   YAxis,
   Cell,
-} from "@/components/ui/chart"
+} from "recharts"
+import { useResponsiveChart } from "@/hooks/use-responsive-chart"
+import { useEffect, useState } from "react"
 
 export function InsightsCharts() {
-  // Sample data for charts
-  const viewsByArticle = [
+  const chartConfig = useResponsiveChart()
+  const [isMounted, setIsMounted] = useState(false)
+
+  // Full datasets
+  const fullViewsByArticle = [
     { name: "10 Tips for Better Writing", views: 4500 },
     { name: "The Future of Web Development", views: 3800 },
     { name: "CSS Grid Layout", views: 3200 },
@@ -29,7 +34,7 @@ export function InsightsCharts() {
     { name: "Understanding JavaScript", views: 2500 },
   ]
 
-  const engagementOverTime = [
+  const fullEngagementOverTime = [
     { date: "2023-01", views: 2500, likes: 350, comments: 120 },
     { date: "2023-02", views: 3000, likes: 400, comments: 150 },
     { date: "2023-03", views: 3500, likes: 450, comments: 180 },
@@ -45,6 +50,28 @@ export function InsightsCharts() {
     { name: "Referrals", value: 10 },
   ]
 
+  // Simplified datasets for smaller screens
+  const [viewsByArticle, setViewsByArticle] = useState(fullViewsByArticle)
+  const [engagementOverTime, setEngagementOverTime] = useState(fullEngagementOverTime)
+
+  // Update data based on screen size
+  useEffect(() => {
+    setIsMounted(true)
+
+    if (chartConfig.simplifyData && chartConfig.maxItems) {
+      setViewsByArticle(fullViewsByArticle.slice(0, chartConfig.maxItems))
+      setEngagementOverTime(fullEngagementOverTime.slice(0, chartConfig.maxItems))
+    } else {
+      setViewsByArticle(fullViewsByArticle)
+      setEngagementOverTime(fullEngagementOverTime)
+    }
+  }, [chartConfig.simplifyData, chartConfig.maxItems])
+
+  // Prevent hydration mismatch
+  if (!isMounted) {
+    return null
+  }
+
   const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#8884D8"]
 
   return (
@@ -52,9 +79,9 @@ export function InsightsCharts() {
       <Card>
         <CardHeader>
           <CardTitle>Top Articles by Views</CardTitle>
-          <CardDescription>Most viewed articles in the selected period</CardDescription>
+          <CardDescription className="hidden sm:block">Most viewed articles in the selected period</CardDescription>
         </CardHeader>
-        <CardContent className="h-[300px]">
+        <CardContent className="h-[250px] sm:h-[300px]">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart
               data={viewsByArticle}
@@ -62,14 +89,21 @@ export function InsightsCharts() {
               margin={{
                 top: 5,
                 right: 30,
-                left: 100,
+                left: chartConfig.fontSize * 10, // Dynamic left margin based on font size
                 bottom: 5,
               }}
+              barSize={chartConfig.barSize}
             >
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis type="number" />
-              <YAxis type="category" dataKey="name" tick={{ fontSize: 12 }} width={100} />
-              <Tooltip />
+              {chartConfig.showGrid && <CartesianGrid strokeDasharray="3 3" />}
+              <XAxis type="number" tick={{ fontSize: chartConfig.fontSize }} />
+              <YAxis
+                type="category"
+                dataKey="name"
+                tick={{ fontSize: chartConfig.fontSize }}
+                width={chartConfig.fontSize * 10}
+                tickFormatter={chartConfig.labelFormatter}
+              />
+              {chartConfig.showTooltip && <Tooltip />}
               <Bar dataKey="views" fill="#8884d8" />
             </BarChart>
           </ResponsiveContainer>
@@ -78,9 +112,9 @@ export function InsightsCharts() {
       <Card>
         <CardHeader>
           <CardTitle>Engagement Over Time</CardTitle>
-          <CardDescription>Views, likes, and comments over time</CardDescription>
+          <CardDescription className="hidden sm:block">Views, likes, and comments over time</CardDescription>
         </CardHeader>
-        <CardContent className="h-[300px]">
+        <CardContent className="h-[250px] sm:h-[300px]">
           <ResponsiveContainer width="100%" height="100%">
             <LineChart
               data={engagementOverTime}
@@ -91,14 +125,29 @@ export function InsightsCharts() {
                 bottom: 5,
               }}
             >
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="date" />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <Line type="monotone" dataKey="views" stroke="#8884d8" activeDot={{ r: 8 }} />
-              <Line type="monotone" dataKey="likes" stroke="#82ca9d" />
-              <Line type="monotone" dataKey="comments" stroke="#ffc658" />
+              {chartConfig.showGrid && <CartesianGrid strokeDasharray="3 3" />}
+              <XAxis
+                dataKey="date"
+                tick={{ fontSize: chartConfig.fontSize }}
+                tickFormatter={chartConfig.labelFormatter}
+              />
+              <YAxis tick={{ fontSize: chartConfig.fontSize }} />
+              {chartConfig.showTooltip && <Tooltip />}
+              {chartConfig.showLegend && (
+                <Legend
+                  layout={
+                    chartConfig.legendPosition === "left" || chartConfig.legendPosition === "right"
+                      ? "vertical"
+                      : "horizontal"
+                  }
+                  verticalAlign={chartConfig.legendPosition === "top" ? "top" : "bottom"}
+                  align={chartConfig.legendPosition === "right" ? "right" : "center"}
+                  wrapperStyle={{ fontSize: chartConfig.fontSize }}
+                />
+              )}
+              <Line type="monotone" dataKey="views" stroke="#8884d8" activeDot={{ r: 8 }} strokeWidth={2} />
+              <Line type="monotone" dataKey="likes" stroke="#82ca9d" strokeWidth={2} />
+              <Line type="monotone" dataKey="comments" stroke="#ffc658" strokeWidth={2} />
             </LineChart>
           </ResponsiveContainer>
         </CardContent>
@@ -106,9 +155,9 @@ export function InsightsCharts() {
       <Card>
         <CardHeader>
           <CardTitle>Traffic Sources</CardTitle>
-          <CardDescription>Where your readers are coming from</CardDescription>
+          <CardDescription className="hidden sm:block">Where your readers are coming from</CardDescription>
         </CardHeader>
-        <CardContent className="h-[300px]">
+        <CardContent className="h-[250px] sm:h-[300px]">
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
               <Pie
@@ -116,16 +165,18 @@ export function InsightsCharts() {
                 cx="50%"
                 cy="50%"
                 labelLine={false}
-                outerRadius={80}
+                outerRadius={window.innerWidth < 768 ? 60 : 80}
                 fill="#8884d8"
                 dataKey="value"
-                label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                label={({ name, percent }) =>
+                  window.innerWidth < 480 ? `${(percent * 100).toFixed(0)}%` : `${name} ${(percent * 100).toFixed(0)}%`
+                }
               >
                 {trafficSources.map((entry, index) => (
                   <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                 ))}
               </Pie>
-              <Tooltip />
+              {chartConfig.showTooltip && <Tooltip />}
             </PieChart>
           </ResponsiveContainer>
         </CardContent>
@@ -133,9 +184,9 @@ export function InsightsCharts() {
       <Card>
         <CardHeader>
           <CardTitle>Growth Trends</CardTitle>
-          <CardDescription>Cumulative growth in readership</CardDescription>
+          <CardDescription className="hidden sm:block">Cumulative growth in readership</CardDescription>
         </CardHeader>
-        <CardContent className="h-[300px]">
+        <CardContent className="h-[250px] sm:h-[300px]">
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart
               data={engagementOverTime}
@@ -146,11 +197,15 @@ export function InsightsCharts() {
                 bottom: 0,
               }}
             >
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="date" />
-              <YAxis />
-              <Tooltip />
-              <Area type="monotone" dataKey="views" stackId="1" stroke="#8884d8" fill="#8884d8" />
+              {chartConfig.showGrid && <CartesianGrid strokeDasharray="3 3" />}
+              <XAxis
+                dataKey="date"
+                tick={{ fontSize: chartConfig.fontSize }}
+                tickFormatter={chartConfig.labelFormatter}
+              />
+              <YAxis tick={{ fontSize: chartConfig.fontSize }} />
+              {chartConfig.showTooltip && <Tooltip />}
+              <Area type="monotone" dataKey="views" stackId="1" stroke="#8884d8" fill="#8884d8" strokeWidth={2} />
             </AreaChart>
           </ResponsiveContainer>
         </CardContent>

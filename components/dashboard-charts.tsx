@@ -54,8 +54,8 @@ export function DashboardCharts() {
                 data={viewsData}
                 margin={{
                   top: 10,
-                  right: 30,
-                  left: 0,
+                  right: 0,
+                  left: -18,
                   bottom: 0,
                 }}
               >
