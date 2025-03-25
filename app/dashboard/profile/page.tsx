@@ -97,14 +97,35 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 ">
       <div>
         <h1 className="text-3xl font-bold tracking-tight">Profile</h1>
         <p className="text-muted-foreground">Manage your account settings and profile information.</p>
       </div>
-      <div className="grid gap-10 md:grid-cols-[1fr_250px]">
+
+      {/* Change the grid to be responsive - stack on mobile, two columns on larger screens */}
+      <div className="grid gap-8 md:grid-cols-[1fr_250px]">
+      <div className="space-y-6 sm:hidden">
+          <div>
+            <h3 className="text-lg font-medium">Avatar</h3>
+            <p className="text-sm text-muted-foreground">Upload your profile picture</p>
+          </div>
+          <AvatarUpload />
+
+          {/* <div className="space-y-2">
+            <h3 className="text-lg font-medium">Social Profiles</h3>
+            <p className="text-sm text-muted-foreground">Your public social media profiles</p>
+            <Card className="p-4">
+              {Object.keys(urls).length === 0 ? (
+                <p className="text-sm text-muted-foreground">No social links added yet.</p>
+              ) : (
+                <SocialLinksDisplay urls={urls} className="mt-2" />
+              )}
+            </Card>
+          </div> */}
+        </div>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <FormField
               control={form.control}
               name="username"
@@ -201,18 +222,23 @@ export default function ProfilePage() {
                         const platformName = platform.charAt(0).toUpperCase() + platform.slice(1)
 
                         return (
-                          <div key={platform} className="flex items-center justify-between rounded-md border p-3">
-                            <div className="flex items-center gap-2">
+                          <div
+                            key={platform}
+                            className="flex flex-col sm:flex-row sm:items-center justify-between rounded-md border p-3 gap-2"
+                          >
+                            <div className="flex items-center gap-2 min-w-0">
                               {getIconComponent(platform)}
                               <span className="font-medium">{platformName}</span>
                             </div>
-                            <div className="flex items-center gap-3">
-                              <span className="text-sm text-muted-foreground max-w-[200px] truncate">{url}</span>
+                            <div className="flex items-center gap-2 w-full sm:w-auto justify-between sm:justify-end min-w-0">
+                              <span className="text-sm text-muted-foreground truncate max-w-[180px] xs:max-w-[120px]">
+                                {url}
+                              </span>
                               <Button
                                 variant="ghost"
                                 size="icon"
                                 onClick={() => handleRemoveSocialLink(platform)}
-                                className="h-8 w-8 text-destructive hover:text-destructive"
+                                className="h-8 w-8 text-destructive hover:text-destructive shrink-0"
                               >
                                 <Trash2 className="h-4 w-4" />
                                 <span className="sr-only">Remove {platformName}</span>
@@ -227,18 +253,20 @@ export default function ProfilePage() {
               </CardContent>
             </Card>
 
-            <Button type="submit">Update profile</Button>
+            <Button type="submit" className="w-full sm:w-auto px-3 py-2">
+              Update profile
+            </Button>
           </form>
         </Form>
 
-        <div className="space-y-6">
+        <div className="space-y-6 hidden sm:block">
           <div>
             <h3 className="text-lg font-medium">Avatar</h3>
             <p className="text-sm text-muted-foreground">Upload your profile picture</p>
           </div>
           <AvatarUpload />
 
-          <div className="space-y-2">
+          {/* <div className="space-y-2">
             <h3 className="text-lg font-medium">Social Profiles</h3>
             <p className="text-sm text-muted-foreground">Your public social media profiles</p>
             <Card className="p-4">
@@ -248,7 +276,7 @@ export default function ProfilePage() {
                 <SocialLinksDisplay urls={urls} className="mt-2" />
               )}
             </Card>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>
