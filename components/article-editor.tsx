@@ -14,6 +14,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { toast } from "@/components/ui/use-toast"
 import { MarkdownEditor } from "@/components/markdown-editor"
 import { Switch } from "@/components/ui/switch"
+import Editor from "./editor"
 
 const articleFormSchema = z.object({
   title: z
@@ -242,13 +243,14 @@ export function ArticleEditor() {
                 </TabsList>
                 <TabsContent value="editor">
                   <FormControl>
-                    <MarkdownEditor
+                    {/* <MarkdownEditor
                       value={field.value}
                       onChange={(value) => {
                         field.onChange(value)
                         setPreviewContent(value)
                       }}
-                    />
+                    /> */}
+                    <Editor  />
                   </FormControl>
                 </TabsContent>
                 <TabsContent value="preview">

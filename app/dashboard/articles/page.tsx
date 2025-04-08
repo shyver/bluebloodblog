@@ -2,6 +2,7 @@
 import { Button } from "@/components/ui/button"
 import { Plus } from "lucide-react"
 import Link from "next/link"
+import { ArticlesTable } from "@/components/articles-table"
 
 export default function ArticlesPage() {
   return (
@@ -17,7 +18,7 @@ export default function ArticlesPage() {
           </Link>
         </Button>
       </div>
-      {/* <ArticlesTable /> */}
+      <ArticlesTable />
     </div>
   )
 }

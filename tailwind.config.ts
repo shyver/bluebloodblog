@@ -62,6 +62,9 @@ const config = {
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
+      fontFamily: {
+        title: ["Inter", "system-ui", "sans-serif"], // Define `font-title` here
+      },
       keyframes: {
         "accordion-down": {
           from: { height: "0" },
@@ -76,9 +79,51 @@ const config = {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
       },
+      typography: {
+        DEFAULT: {
+          css: {
+            h1: {
+              fontFamily: "var(--font-title)",
+              fontWeight: "700",
+              color: "hsl(var(--primary))",
+              fontSize: "50px",
+            },
+            h2: {
+              fontFamily: "var(--font-title)",
+              fontWeight: "700",
+              color: "hsl(var(--primary))",
+              fontSize: "40px",
+            },
+            h3: {
+              fontFamily: "var(--font-title)",
+              fontWeight: "700",
+              color: "hsl(var(--primary))",
+              fontSize: "30px",
+            },
+            h4: {
+              fontFamily: "var(--font-title)",
+              fontWeight: "700",
+              color: "hsl(var(--primary))",
+              fontSize: "25px",
+            },
+            h5: {
+              fontFamily: "var(--font-title)",
+              fontWeight: "700",
+              color: "hsl(var(--primary))",
+              fontSize: "20px",
+            },
+            h6: {
+              fontFamily: "var(--font-title)",
+              fontWeight: "700",
+              color: "hsl(var(--primary))",
+              fontSize: "16px",
+            },
+          },
+        },
+      },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")],
 } satisfies Config
 
 export default config
