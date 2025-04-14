@@ -11,79 +11,75 @@ import {
   
   import { cx } from "class-variance-authority";
   
-  // TODO I am using cx here to get tailwind autocomplete working, idk if someone else can write a regex to just capture the class key in objects
   
   // You can overwrite the placeholder with your own configuration
-  const placeholder = Placeholder;
+  const placeholder = Placeholder.configure({
+    placeholder: "Write something...",
+    
+  });
   const tiptapLink = TiptapLink.configure({
     HTMLAttributes: {
-      class: cx(
+      class:
         "text-muted-foreground underline underline-offset-[3px] hover:text-primary transition-colors cursor-pointer",
-      ),
+    
     },
   });
   
   const taskList = TaskList.configure({
     HTMLAttributes: {
-      class: cx("not-prose pl-2 pr-4"),
+      class: "not-prose pl-2 pr-4"
     },
   });
   const taskItem = TaskItem.configure({
     HTMLAttributes: {
-      class: cx("flex items-start my-4"),
+      class: "flex items-start my-4"
     },
     nested: true,
   });
   
   const horizontalRule = HorizontalRule.configure({
     HTMLAttributes: {
-      class: cx("mt-4 mb-6 border-t border-muted-foreground"),
+      class: "mt-4 mb-6 border-t border-muted-foreground"
     },
   });
   
   const starterKit = StarterKit.configure({
     heading: {
-      levels: [1, 2, 3, 4, 5, 6],
-      HTMLAttributes: (attrs: { level: number }) => ({
-        class: cx(
-          "font-title font-bold text-primary",
-          attrs.level === 1 && "text-[50px]",
-          attrs.level === 2 && "text-[40px]",
-          attrs.level === 3 && "text-[30px]",
-          attrs.level === 4 && "text-[25px]",
-          attrs.level === 5 && "text-[20px]",
-          attrs.level === 6 && "text-[16px]"
-        ),
-      }),
+      levels: [1, 2, 3],
+      HTMLAttributes: {
+        class: 
+          "font-title font-bold pl-4 my-2"
+          
+      },
     },
     bulletList: {
       HTMLAttributes: {
-        class: cx("list-disc list-outside leading-3 "),
+        class: "list-disc list-outside leading-3 flex flex-col gap-4 pl-10"
       },
     },
     orderedList: {
       HTMLAttributes: {
-        class: cx("list-decimal list-outside leading-3 "),
+        class: "list-decimal list-outside leading-3 flex flex-col gap-4 "
       },
     },
     listItem: {
       HTMLAttributes: {
-        class: cx("leading-normal -mb-2"),
+        class: "leading-normal -mb-2"
       },
     },
     blockquote: {
       HTMLAttributes: {
-        class: cx("border-l-4 border-primary"),
+        class: "border-l-4 border-primary"
       },
     },
     codeBlock: {
       HTMLAttributes: {
-        class: cx("rounded-sm bg-muted border p-5 font-mono font-medium"),
+        class: "rounded-sm bg-muted border p-5 font-mono font-medium"
       },
     },
     code: {
       HTMLAttributes: {
-        class: cx("rounded-md bg-muted  px-1.5 py-1 font-mono font-medium"),
+        class: "rounded-md bg-muted  px-1.5 py-1 font-mono font-medium",
         spellcheck: "false",
       },
     },

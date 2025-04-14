@@ -9,12 +9,11 @@ import { Button } from "@/components/ui/button"
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Textarea } from "@/components/ui/textarea"
 import { toast } from "@/components/ui/use-toast"
-import { MarkdownEditor } from "@/components/markdown-editor"
-import { Switch } from "@/components/ui/switch"
-import Editor from "./editor"
+
+import dynamic from "next/dynamic"
+const BlockNote= dynamic(() => import('./blocknote'), { ssr: false });
 
 const articleFormSchema = z.object({
   title: z
@@ -71,7 +70,6 @@ const defaultValues: Partial<ArticleFormValues> = {
 }
 
 export function ArticleEditor() {
-  const [previewContent, setPreviewContent] = useState("")
 
   const form = useForm<ArticleFormValues>({
     resolver: zodResolver(articleFormSchema),
@@ -101,8 +99,33 @@ export function ArticleEditor() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <div className="grid gap-6 md:grid-cols-2">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 flex flex-row">
+      <div className="flex flex-col w-full gap-6">
+
+<FormField
+  control={form.control}
+  name="content"
+  render={({ field }) => (
+    <FormItem>
+      <FormLabel>Content</FormLabel>
+          <FormControl>
+            {/* <MarkdownEditor
+              value={field.value}
+              onChange={(value) => {
+                field.onChange(value)
+                setPreviewContent(value)
+              }}
+            /> */}
+            <BlockNote  />
+          </FormControl>
+      <FormMessage />
+    </FormItem>
+  )}
+/>
+
+
+  </div>
+        <div className="flex flex-col gap-2">
           <FormField
             control={form.control}
             name="title"
@@ -140,7 +163,7 @@ export function ArticleEditor() {
               </FormItem>
             )}
           />
-        </div>
+
         <FormField
           control={form.control}
           name="excerpt"
@@ -160,7 +183,6 @@ export function ArticleEditor() {
             </FormItem>
           )}
         />
-        <div className="grid gap-6 md:grid-cols-2">
           <FormField
             control={form.control}
             name="category"
@@ -200,7 +222,6 @@ export function ArticleEditor() {
               </FormItem>
             )}
           />
-        </div>
         <FormField
           control={form.control}
           name="featuredImage"
@@ -215,101 +236,29 @@ export function ArticleEditor() {
             </FormItem>
           )}
         />
-        <FormField
-          control={form.control}
-          name="autoCorrect"
-          render={({ field }) => (
-            <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-              <div className="space-y-0.5">
-                <FormLabel className="text-base">Auto Correct</FormLabel>
-                <FormDescription>Enable automatic spelling and grammar correction while typing.</FormDescription>
-              </div>
-              <FormControl>
-                <Switch checked={field.value} onCheckedChange={field.onChange} />
-              </FormControl>
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="content"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Content</FormLabel>
-              <Tabs defaultValue="editor" className="w-full">
-                <TabsList className="mb-2">
-                  <TabsTrigger value="editor">Editor</TabsTrigger>
-                  <TabsTrigger value="preview">Preview</TabsTrigger>
-                </TabsList>
-                <TabsContent value="editor">
-                  <FormControl>
-                    {/* <MarkdownEditor
-                      value={field.value}
-                      onChange={(value) => {
-                        field.onChange(value)
-                        setPreviewContent(value)
-                      }}
-                    /> */}
-                    <Editor  />
-                  </FormControl>
-                </TabsContent>
-                <TabsContent value="preview">
-                  <div className="min-h-[300px] rounded-md border border-input bg-background p-4">
-                    <div className="prose dark:prose-invert max-w-none">
-                      {/* In a real app, you would render Markdown here */}
-                      <div dangerouslySetInnerHTML={{ __html: previewContent.replace(/\n/g, "<br />") }} />
-                    </div>
-                  </div>
-                </TabsContent>
-              </Tabs>
-              <FormDescription>Write your article content using Markdown.</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="status"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Status</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select a status" />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  <SelectItem value="published">Published</SelectItem>
-                  <SelectItem value="draft">Draft</SelectItem>
-                </SelectContent>
-              </Select>
-              <FormDescription>Set as draft to save without publishing.</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
         <div className="flex gap-2">
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => {
-              form.setValue("status", "draft")
-              form.handleSubmit(onSubmit)()
-            }}
-          >
-            Save as Draft
-          </Button>
-          <Button
-            type="button"
-            onClick={() => {
-              form.setValue("status", "published")
-              form.handleSubmit(onSubmit)()
-            }}
-          >
-            Publish
-          </Button>
+  <Button
+    type="button"
+    variant="outline"
+    onClick={() => {
+      form.setValue("status", "draft")
+      form.handleSubmit(onSubmit)()
+    }}
+  >
+    Save as Draft
+  </Button>
+  <Button
+    type="button"
+    onClick={() => {
+      form.setValue("status", "published")
+      form.handleSubmit(onSubmit)()
+    }}
+  >
+    Publish
+  </Button>
+</div>
         </div>
+          
       </form>
     </Form>
   )

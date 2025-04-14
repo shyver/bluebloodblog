@@ -1,9 +1,9 @@
 import { ArticleEditor } from "@/components/article-editor"
-import Editor from "@/components/editor"
+import BlockNote from "@/components/blocknote"
 export default function NewArticlePage() {
   return (
+      <ArticleEditor/>
 
-      <Editor />
 
   )
 }
