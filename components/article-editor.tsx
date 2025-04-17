@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import {useRef } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
@@ -8,12 +8,11 @@ import { z } from "zod"
 import { Button } from "@/components/ui/button"
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Textarea } from "@/components/ui/textarea"
 import { toast } from "@/components/ui/use-toast"
 
 import dynamic from "next/dynamic"
-const BlockNote= dynamic(() => import('./blocknote'), { ssr: false });
+const 
+BlockNote= dynamic(() => import('./blocknote'), { ssr: false });
 
 const articleFormSchema = z.object({
   title: z
@@ -24,29 +23,7 @@ const articleFormSchema = z.object({
     .max(100, {
       message: "Title must not be longer than 100 characters.",
     }),
-  slug: z
-    .string()
-    .min(5, {
-      message: "Slug must be at least 5 characters.",
-    })
-    .max(100, {
-      message: "Slug must not be longer than 100 characters.",
-    })
-    .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, {
-      message: "Slug must contain only lowercase letters, numbers, and hyphens.",
-    }),
-  excerpt: z
-    .string()
-    .max(160, {
-      message: "Excerpt must not be longer than 160 characters.",
-    })
-    .optional(),
-  content: z.string().min(50, {
-    message: "Content must be at least 50 characters.",
-  }),
-  category: z.string({
-    required_error: "Please select a category.",
-  }),
+  content: z.string().optional(),
   tags: z.string().optional(),
   featuredImage: z.string().optional(),
   autoCorrect: z.boolean().default(true),
@@ -59,10 +36,7 @@ type ArticleFormValues = z.infer<typeof articleFormSchema>
 
 const defaultValues: Partial<ArticleFormValues> = {
   title: "",
-  slug: "",
-  excerpt: "",
   content: "",
-  category: "",
   tags: "",
   featuredImage: "",
   autoCorrect: true,
@@ -70,7 +44,7 @@ const defaultValues: Partial<ArticleFormValues> = {
 }
 
 export function ArticleEditor() {
-
+  const blockNoteRef = useRef<any>(null);
   const form = useForm<ArticleFormValues>({
     resolver: zodResolver(articleFormSchema),
     defaultValues,
@@ -86,28 +60,51 @@ export function ArticleEditor() {
     })
   }
 
-  function generateSlug(title: string) {
-    const slug = title
-      .toLowerCase()
-      .replace(/[^\w\s-]/g, "")
-      .replace(/\s+/g, "-")
-      .replace(/-+/g, "-")
-      .trim()
+  // function generateSlug(title: string) {
+  //   const slug = title
+  //     .toLowerCase()
+  //     .replace(/[^\w\s-]/g, "")
+  //     .replace(/\s+/g, "-")
+  //     .replace(/-+/g, "-")
+  //     .trim()
 
-    form.setValue("slug", slug, { shouldValidate: true })
-  }
+  //   form.setValue("slug", slug, { shouldValidate: true })
+  // }
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 flex flex-row">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 flex flex-col lg:flex-row">
       <div className="flex flex-col w-full gap-6">
+      <FormField
+            control={form.control}
+            name="title"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Input
+                    onKeyUp={(e) => {
+                      if (e.key === "Enter") {
+                        e.preventDefault()
+                        blockNoteRef.current?.focus();
+                      }
+                    }}
+                    placeholder="Enter article title"
+                    {...field}
+                    onChange={(e) => {
+                      field.onChange(e)
+                    }} className=" !text-[50px] border-none focus:border-none focus:ring-0 focus:outline-none focus-visible:ring-0 focus-visible:outline-none shadow-none h-20"
+/>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
 <FormField
   control={form.control}
   name="content"
-  render={({ field }) => (
+  render={() => (
     <FormItem>
-      <FormLabel>Content</FormLabel>
           <FormControl>
             {/* <MarkdownEditor
               value={field.value}
@@ -116,7 +113,7 @@ export function ArticleEditor() {
                 setPreviewContent(value)
               }}
             /> */}
-            <BlockNote  />
+            <BlockNote ref={blockNoteRef} formSetValue={form.setValue} />
           </FormControl>
       <FormMessage />
     </FormItem>
@@ -126,88 +123,7 @@ export function ArticleEditor() {
 
   </div>
         <div className="flex flex-col gap-2">
-          <FormField
-            control={form.control}
-            name="title"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Title</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="Enter article title"
-                    {...field}
-                    onChange={(e) => {
-                      field.onChange(e)
-                      if (!form.getValues("slug")) {
-                        generateSlug(e.target.value)
-                      }
-                    }}
-                  />
-                </FormControl>
-                <FormDescription>The title of your article. Keep it clear and engaging.</FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="slug"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Slug</FormLabel>
-                <FormControl>
-                  <Input placeholder="enter-article-slug" {...field} />
-                </FormControl>
-                <FormDescription>The URL-friendly version of the title.</FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-        <FormField
-          control={form.control}
-          name="excerpt"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Excerpt</FormLabel>
-              <FormControl>
-                <Textarea
-                  placeholder="Brief summary of your article"
-                  className="resize-none"
-                  {...field}
-                  value={field.value || ""}
-                />
-              </FormControl>
-              <FormDescription>A short summary that appears in article previews. Max 160 characters.</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-          <FormField
-            control={form.control}
-            name="category"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Category</FormLabel>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select a category" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectItem value="technology">Technology</SelectItem>
-                    <SelectItem value="programming">Programming</SelectItem>
-                    <SelectItem value="design">Design</SelectItem>
-                    <SelectItem value="writing">Writing</SelectItem>
-                    <SelectItem value="business">Business</SelectItem>
-                  </SelectContent>
-                </Select>
-                <FormDescription>The main category for your article.</FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          
           <FormField
             control={form.control}
             name="tags"
