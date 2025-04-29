@@ -10,6 +10,7 @@ import {
   SheetHeader,
   SheetTrigger,
 } from "@/components/ui/sheet"
+import { Input } from "./ui/input";
 
 const links: {
   href: string;
@@ -30,15 +31,15 @@ const links: {
 ];
 
 // const cta: JSX.Element = <ButtonSignin extraStyle="btn-primary hover:bg-transparent hover:text-white " />;
-const waitlist: JSX.Element =<Link href='/#cta' key='#cta' className="btn btn-secondary text-black hover:bg-transparent hover:text-white border h-13 " >Join Waitlist</Link>;
-const demo: JSX.Element =<Button className=" bg-transparent hover:bg-transparent shadow-none  border hover:border-secondary h-13 w-fit" > <Link  href={'https://app.aiklyra.com/'} >See Aiklyra in Action</Link></Button>;
+const getStarted: JSX.Element = <Button asChild><Link href='/#cta' key='#cta' >Start Writing</Link></Button> ;
+const login: JSX.Element =<Button className=" bg-transparent hover:bg-transparent shadow-none  border hover:border-primary text-black dark:text-white w-fit" > <Link  href={'/login'} >Login</Link></Button>;
 // A header with a logo on the left, links in the center (like Pricing, etc...), and a CTA (like Get Started or Login) on the right.
 // The header is responsive, and on mobile, the links are hidden behind a burger button.
 const Header = () => {
 
 
   return (
-    <header className="  w-full fixed top-0 flex justify-center text-white backdrop-blur-md z-50 ">
+    <header className="  w-full fixed top-0 flex justify-center text-black dark:text-white backdrop-blur-md z-50 ">
       <nav
         className="container flex items-center justify-between py-4 max-w-7xl  left-0 w-full   px-8  "
         aria-label="Global"
@@ -59,7 +60,7 @@ const Header = () => {
               width={32}
               height={32}
             /> */}
-            <span className={`font-normal text-lg font-NeueMachina  `}>Blue Blog</span>
+            <span className={`font-normal text-lg font-NeueMachina  `}>BlueBlog</span>
           </Link>
         </div>
         {/* Burger button to open menu on mobile */}
@@ -99,7 +100,7 @@ const Header = () => {
                 width={32}
                 height={32}
               /> */}
-              <span className={`font-bold text-lg`}>Blue Blog</span>
+              <span className={`font-bold text-lg`}>BlueBlog</span>
             </Link>
             
           </div>
@@ -130,7 +131,7 @@ const Header = () => {
             </div>
             <div className="divider"></div>
             {/* Your CTA on small screens */}
-            <div className="flex flex-col">{waitlist}</div>
+            <div className="flex flex-col">{getStarted}</div>
           </div>
         </div>
       </div>
@@ -144,23 +145,14 @@ const Header = () => {
 
         {/* Your links on large screens */}
         <div className="hidden lg:flex lg:justify-center lg:gap-12 lg:items-center">
-          {links.map((link) => (
-            <Link
-              href={link.href}
-              key={link.href}
-              className="link link-hover"
-              title={link.label}
-            >
-              {link.label}
-            </Link>
-          ))}
+          <Input className="bg-white dark:bg-black focus:ring-primary rounded-2xl w-[400px]" placeholder="Search..."  />
         </div>
 
         {/* CTA on large screens */}
-        <div className="hidden lg:flex flex-row w-[300px]">
+        <div className="hidden lg:flex flex-row gap-2 ">
 
-        <div className="hidden lg:flex lg:justify-end lg:flex-1 ">{demo}</div>
-        <div className="hidden lg:flex lg:justify-end lg:flex-1 btn-primary">{waitlist}</div>
+        <div className="hidden lg:flex lg:justify-end lg:flex-1 ">{login}</div>
+        <div className="hidden lg:flex lg:justify-end lg:flex-1 btn-primary">{getStarted}</div>
         </div>
       </nav>
 

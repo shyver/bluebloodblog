@@ -1,17 +1,21 @@
+"use client"
 import type React from "react"
 import { AdminSidebar } from "@/components/admin-sidebar"
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
 import { UserNav } from "@/components/user-nav"
 
 import { MobileAdminSidebar } from "@/components/mobile-admin-sidebar"
+import { useState } from "react"
 export default function DashboardLayout({
   children,
 }: {
   children: React.ReactNode
-}) {
+})
+{
+  const [open, setOpen] = useState(true)
   return (
     <div className="flex min-h-screen">
-      <SidebarProvider>
+      <SidebarProvider onOpenChange={setOpen} open={open}>
       <AdminSidebar />
       <SidebarInset className="flex flex-col">
         <header className="sticky top-0 z-10 flex h-16 items-center gap-4 border-b bg-background px-6">

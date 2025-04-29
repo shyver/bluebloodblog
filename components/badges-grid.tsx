@@ -27,7 +27,7 @@ type Badge = {
   usersAwarded: number
 }
 
-export function BadgesGrid() {
+const BadgesGrid = () => {
   const [badges, setBadges] = useState<Badge[]>([
     {
       id: "1",
@@ -164,7 +164,7 @@ export function BadgesGrid() {
                   id="badge-icon"
                   value={newBadge.icon}
                   onChange={(e) => setNewBadge({ ...newBadge, icon: e.target.value })}
-                  placeholder="🏆"
+                  placeholder="✿"
                 />
               </div>
               <div className="grid gap-2">
@@ -303,3 +303,4 @@ export function BadgesGrid() {
   )
 }
 
+export default BadgesGrid

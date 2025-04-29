@@ -73,17 +73,18 @@ const BlockNote = forwardRef(({formSetValue}:any,ref)=> {
 
   // Renders the editor instance using a React component
   return isClient && editor ? (
-    <BlockNoteView
-      editor={editor}
-      theme={"light"}
-      onChange={() => {
-        setContent(editor.document);
-        console.log(JSON.stringify(editor.document));
+
+      <BlockNoteView
+        editor={editor}
+        theme={"light"}
+        onChange={() => {
+          setContent(editor.document);
+          console.log(JSON.stringify(editor.document));
+          
+          formSetValue("content", JSON.stringify(editor.document)); // Update the form value with the editor content
+        }}
         
-        formSetValue("content", JSON.stringify(editor.document)); // Update the form value with the editor content
-      }}
-      
-    />
+      />
   ) : (
     <div>Loading...</div>
   );

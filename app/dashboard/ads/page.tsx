@@ -17,7 +17,7 @@ export default function AdsPage() {
           </Link>
         </Button>
       </div>
-      {/* <AdsTable /> */}
+      <AdsTable />
     </div>
   )
 }

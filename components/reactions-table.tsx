@@ -12,7 +12,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table"
-import { ArrowUpDown, Check, MoreHorizontal, ThumbsDown, ThumbsUp, X } from "lucide-react"
+import { ArrowUpDown,  MoreHorizontal, ThumbsDown, ThumbsUp, X } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
@@ -260,17 +260,7 @@ export function ReactionsTable() {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuItem
-                  onClick={() => {
-                    toast({
-                      title: "Reaction Approved",
-                      description: `The ${reaction.type} reaction has been approved.`,
-                    })
-                  }}
-                >
-                  <Check className="mr-2 h-4 w-4" />
-                  <span>Approve</span>
-                </DropdownMenuItem>
+                
                 <DropdownMenuItem
                   onClick={() => {
                     toast({

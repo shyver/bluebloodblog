@@ -24,9 +24,9 @@ export function AdminSidebar() {
   }
 
   return (
-    <Sidebar className="hidden md:flex" variant="inset" >
+    <Sidebar className="hidden md:flex" variant="inset"  >
       <SidebarHeader className="flex h-14 items-center px-4">
-        <Link href="/dashboard" className="flex items-center gap-2 font-semibold">
+        <Link href="/" className="flex items-center gap-2 font-semibold">
           <span className="h-6 w-6 rounded-full bg-primary"></span>
           <span className="text-lg font-bold">BlueBlood</span>
         </Link>

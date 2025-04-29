@@ -1,6 +1,8 @@
-import { BadgesGrid } from "@/components/badges-grid"
+"use client"
 import { BadgesStats } from "@/components/badges-stats"
+import dynamic from "next/dynamic"
 
+const BadgesGrid = dynamic(() => import("@/components/badges-grid"), {ssr: false})
 export default function BadgesPage() {
   return (
     <div className="space-y-6">

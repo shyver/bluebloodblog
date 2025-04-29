@@ -9,7 +9,7 @@ export default function ReactionsPage() {
         <p className="text-muted-foreground">Monitor and manage user reactions to your content.</p>
       </div>
       <ReactionsStats />
-      {/* <ReactionsTable /> */}
+      <ReactionsTable />
     </div>
   )
 }
